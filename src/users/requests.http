@@ -1,0 +1,29 @@
+### Find a particular user with a given ID
+GET http://localhost:3000/user/1
+
+### Find all users with a given email
+GET http://localhost:3000/user?email=asdf@asdf.com
+
+###Sign up
+POST http://localhost:3000/user/auth/signup
+Content-Type: application/json
+
+{
+  "email": "test@test.com",
+  "password": "12345"
+}
+
+###Sign in
+POST http://localhost:3000/user/auth/signin
+Content-Type: application/json
+
+{
+  "email": "test@test.com",
+  "password": "12345"
+}
+
+###Sign out
+POST http://localhost:3000/user/auth/signout
+
+### whoami
+GET  http://localhost:3000/user/whoami

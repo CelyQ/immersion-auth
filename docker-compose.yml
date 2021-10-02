@@ -1,0 +1,38 @@
+version: '3.1'
+
+services:
+  immersion-auth-db-dev:
+    container_name: immersion-auth-db-dev
+    build:
+      context: .
+      target: development
+      dockerfile: db.Dockerfile
+    volumes:
+      - postgres-data-dev:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    environment:
+      DB_ENV: development
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: db
+    restart: unless-stopped
+
+  immersion-auth-api-dev:
+    container_name: immersion-auth-api-dev
+    build:
+      context: .
+      target: development
+      dockerfile: Dockerfile
+    command: yarn start:debug
+    ports:
+      - 3000:3000
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    depends_on:
+      - immersion-auth-db-dev
+    restart: unless-stopped
+
+volumes:
+  postgres-data-dev:
