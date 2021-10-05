@@ -1,36 +1,35 @@
 version: '3.1'
 
 services:
-  db-dev:
-    container_name: db-dev
+  db-test:
+    container_name: db-test
     build:
       context: .
       dockerfile: db.Dockerfile
     volumes:
-      - postgres-data-dev:/var/lib/postgresql/data
+      - postgres-data-test:/var/lib/postgresql/data
     ports:
-      - 5432:5432
+      - 5433:5432
     env_file:
-      - .env.development
+      - .env.test
     restart: unless-stopped
 
-  api-dev:
-    container_name: api-dev
+  api-test:
+    container_name: api-test
     build:
       context: .
       target: test
       dockerfile: Dockerfile
     command: yarn start:debug
     ports:
-      - 3000:3000
+      - 3001:3000
     environment:
-      NODE_ENV: development
+      NODE_ENV: test
     volumes:
       - .:/usr/src/app
       - /usr/src/app/node_modules
     depends_on:
-      - db-dev
+      - db-test
     restart: unless-stopped
-
 volumes:
-  postgres-data-dev:
+  postgres-data-test:

@@ -1,1 +1,1 @@
-FROM postgres:14.0-alpine AS development
+FROM postgres:14.0-alpine
