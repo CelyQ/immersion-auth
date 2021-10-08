@@ -1,21 +1,15 @@
-import * as dotenv from 'dotenv'
-import { Pool, PoolConfig } from 'pg'
+import { getConnection } from 'typeorm'
 
-dotenv.config({ path: '.env.test' })
-
-const config: PoolConfig = {
-  user: process.env.POSTGRES_USER,
-  password: process.env.POSTGRES_PASSWORD,
-  port: parseInt(process.env.EXPOSED_POSTGRES_PORT),
-  host: process.env.EXPOSED_POSTGRES_HOSTNAME,
-  database: process.env.POSTGRES_DB,
+async function clearDatabase() {
+  const connection = getConnection()
+  const entities = connection.entityMetadatas
+  for (const entity of entities) {
+    const repository = connection.getRepository(entity.name)
+    await repository.query(`TRUNCATE TABLE "${entity.tableName}"`)
+  }
+  await connection.close()
 }
 
-global.beforeEach(async () => {
-  const pool = new Pool(config)
-
-  pool.query('TRUNCATE TABLE "user"', (err) => {
-    if (err) return
-    pool.end()
-  })
+global.afterEach(async () => {
+  await clearDatabase()
 })
